@@ -1,20 +1,20 @@
 ## Teslamate Entity Autodiscovery Scripts
 # v1.1.0 - Device naming update for HA 2023.8
 #
-# Instructions: 
+# Instructions:
 #   1. Edit variables on lines 20-24 per your own setup.
 #   2. Modify, add, or delete any sensors as necessary.
-#   3. Save file into your configuration.yaml, or if you use packages save it 
+#   3. Save file into your configuration.yaml, or if you use packages save it
 #      into the packages folder as a separate yaml file.
 #   4. In Home Assistant, go to developer tools and reload scripts.
 #   5. In Home Assistant, go to scripts and run "Teslamate - Create Entities".
 #   6. (Optional) Create an automation to re-run the script every time the
 #      software version sensor has a state change. This will keep the software
-#      version shown in the device details in-sync with the actual version.   
+#      version shown in the device details in-sync with the actual version.
 
 script:
   teslamate_create:
-    alias: 'Teslamate - Create Entities'
+    alias: "Teslamate - Create Entities"
     sequence:
       - variables:
           ## Edit These Variables As Needed ##
@@ -23,12 +23,12 @@ script:
           suggested_area: Garage
           manufacturer: Tesla
           device_name: Tesla Model 3 #every sensor name and entity ID will begin with this
-          
+
           ## Sensor friendly names ##
           model_sensor_friendly_name: Model Name
           sw_version_sensor_friendly_name: Software Version
           trim_badge_sensor_friendly_name: Trim Badge
-          
+
           ## Only edit variables below if you know what you are doing ##
           # If an override is not desired, replace it by two double quotes: ""
           model_override: "" #Default = Model <Model> <Trim>.
@@ -42,7 +42,7 @@ script:
           model_entity_name: "{{ entity_prefix }}_{{ model_sensor_friendly_name | slugify(separator='_') }}"
           sw_version_entity_name: "{{ entity_prefix }}_{{ sw_version_sensor_friendly_name | slugify(separator='_') }}"
           trim_badge_entity_name: "{{ entity_prefix }}_{{ trim_badge_sensor_friendly_name | slugify(separator='_') }}"
-          
+
       - if:
           - alias: "If the model sensor doesn't exist in home assistant"
             condition: template
@@ -133,15 +133,15 @@ script:
               "sw_version": "{{ sw_version }}"
             }
 
-############ UPDATE SENSORS UTILIZED IN THE DEVICE DETAIL FIRST ############
+      ############ UPDATE SENSORS UTILIZED IN THE DEVICE DETAIL FIRST ############
       - service: script.teslamate_backend
         data:
           sensor_type: sensor
           object_id: model
-          sensor_name: '{{ model_sensor_friendly_name }}'
+          sensor_name: "{{ model_sensor_friendly_name }}"
           icon: mdi:earth
           state_topic_suffix: model
-          device: '{{ device }}'
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -153,9 +153,9 @@ script:
           sensor_type: sensor
           object_id: version
           state_topic_suffix: version
-          sensor_name: '{{ sw_version_sensor_friendly_name }}'
+          sensor_name: "{{ sw_version_sensor_friendly_name }}"
           icon: mdi:numeric
-          device: '{{ device }}'
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -167,17 +167,16 @@ script:
           sensor_type: sensor
           object_id: trim_badging
           state_topic_suffix: trim_badging
-          sensor_name: '{{ trim_badge_sensor_friendly_name }}'
+          sensor_name: "{{ trim_badge_sensor_friendly_name }}"
           icon: mdi:numeric
-          device: '{{ device }}'
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
           manufacturer: "{{ manufacturer }}"
           device_name: "{{ device_name }}"
 
-
-############ BINARY SENSORS ############
+      ############ BINARY SENSORS ############
       - service: script.teslamate_backend
         data:
           sensor_type: binary_sensor
@@ -186,14 +185,13 @@ script:
           state_topic_suffix: state
           device_class: battery_charging
           value_template: \"ON\" if value == \"charging\" else \"OFF\"
-          device: '{{ device }}'
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
           manufacturer: "{{ manufacturer }}"
           device_name: "{{ device_name }}"
 
-        
       - service: script.teslamate_backend
         data:
           sensor_type: binary_sensor
@@ -202,9 +200,9 @@ script:
           state_topic_suffix: is_climate_on
           device_class: running
           icon: mdi:fan
-          payload_off: 'false'
-          payload_on: 'true'
-          device: '{{ device }}'
+          payload_off: "false"
+          payload_on: "true"
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -218,9 +216,9 @@ script:
           sensor_name: Charge Cable Connected
           state_topic_suffix: plugged_in
           device_class: plug
-          payload_off: 'false'
-          payload_on: 'true'
-          device: '{{ device }}'
+          payload_off: "false"
+          payload_on: "true"
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -235,9 +233,9 @@ script:
           state_topic_suffix: is_preconditioning
           device_class: running
           icon: mdi:fan
-          payload_off: 'false'
-          payload_on: 'true'
-          device: '{{ device }}'
+          payload_off: "false"
+          payload_on: "true"
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -252,9 +250,9 @@ script:
           state_topic_suffix: charge_port_door_open
           device_class: door
           icon: mdi:ev-plug-tesla
-          payload_off: 'false'
-          payload_on: 'true'
-          device: '{{ device }}'
+          payload_off: "false"
+          payload_on: "true"
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -269,9 +267,9 @@ script:
           state_topic_suffix: doors_open
           device_class: door
           icon: mdi:car-door
-          payload_off: 'false'
-          payload_on: 'true'
-          device: '{{ device }}'
+          payload_off: "false"
+          payload_on: "true"
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -286,9 +284,9 @@ script:
           state_topic_suffix: frunk_open
           device_class: door
           icon: mdi:car
-          payload_off: 'false'
-          payload_on: 'true'
-          device: '{{ device }}'
+          payload_off: "false"
+          payload_on: "true"
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -303,9 +301,9 @@ script:
           state_topic_suffix: healthy
           device_class: problem
           icon: mdi:heart-pulse
-          payload_off: 'true'
-          payload_on: 'false'
-          device: '{{ device }}'
+          payload_off: "true"
+          payload_on: "false"
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -319,9 +317,9 @@ script:
           sensor_name: Locked
           state_topic_suffix: locked
           device_class: lock
-          payload_off: 'true'
-          payload_on: 'false'
-          device: '{{ device }}'
+          payload_off: "true"
+          payload_on: "false"
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -336,9 +334,9 @@ script:
           state_topic_suffix: is_user_present
           device_class: occupancy
           icon: mdi:account
-          payload_off: 'false'
-          payload_on: 'true'
-          device: '{{ device }}'
+          payload_off: "false"
+          payload_on: "true"
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -352,9 +350,9 @@ script:
           sensor_name: Sentry Mode
           state_topic_suffix: sentry_mode
           icon: mdi:cctv
-          payload_off: 'false'
-          payload_on: 'true'
-          device: '{{ device }}'
+          payload_off: "false"
+          payload_on: "true"
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -369,9 +367,9 @@ script:
           state_topic_suffix: trunk_open
           device_class: door
           icon: mdi:car
-          payload_off: 'false'
-          payload_on: 'true'
-          device: '{{ device }}'
+          payload_off: "false"
+          payload_on: "true"
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -385,9 +383,9 @@ script:
           sensor_name: Update Available
           state_topic_suffix: update_available
           device_class: update
-          payload_off: 'false'
-          payload_on: 'true'
-          device: '{{ device }}'
+          payload_off: "false"
+          payload_on: "true"
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -402,17 +400,16 @@ script:
           state_topic_suffix: windows_open
           icon: mdi:car-door
           device_class: window
-          payload_off: 'false'
-          payload_on: 'true'
-          device: '{{ device }}'
+          payload_off: "false"
+          payload_on: "true"
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
           manufacturer: "{{ manufacturer }}"
           device_name: "{{ device_name }}"
 
-############ SENSORS ############
-
+      ############ SENSORS ############
 
       - service: script.teslamate_backend
         data:
@@ -423,7 +420,7 @@ script:
           device_class: energy
           unit_of_measurement: kWh
           value_template: value | round(1)
-          device: '{{ device }}'
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -438,8 +435,8 @@ script:
           state_class: measurement
           state_topic_suffix: charge_limit_soc
           icon: mdi:battery-charging-90
-          unit_of_measurement: '%'
-          device: '{{ device }}'
+          unit_of_measurement: "%"
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -454,7 +451,7 @@ script:
           device_class: current
           state_topic_suffix: charger_actual_current
           unit_of_measurement: A
-          device: '{{ device }}'
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -469,7 +466,7 @@ script:
           device_class: power
           state_topic_suffix: charger_power
           unit_of_measurement: kW
-          device: '{{ device }}'
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -484,7 +481,7 @@ script:
           device_class: voltage
           state_topic_suffix: charger_voltage
           unit_of_measurement: V
-          device: '{{ device }}'
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -498,7 +495,7 @@ script:
           sensor_name: Scheduled Charging Start Time
           device_class: timestamp
           state_topic_suffix: scheduled_charging_start_time
-          device: '{{ device }}'
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -512,7 +509,7 @@ script:
           sensor_name: Last Update
           device_class: timestamp
           state_topic_suffix: since
-          device: '{{ device }}'
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -528,7 +525,7 @@ script:
           unit_of_measurement: h
           icon: mdi:timer
           state_topic_suffix: time_to_full_charge
-          device: '{{ device }}'
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -545,7 +542,7 @@ script:
           unit_of_measurement: °C
           state_topic_suffix: inside_temp
           value_template: value | round(1)
-          device: '{{ device }}'
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -562,7 +559,7 @@ script:
           unit_of_measurement: °C
           state_topic_suffix: outside_temp
           value_template: value | round(1)
-          device: '{{ device }}'
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -574,11 +571,11 @@ script:
           sensor_type: sensor
           object_id: elevation
           sensor_name: Elevation
-          unit_of_measurement: ft
+          unit_of_measurement: m
           icon: mdi:image-filter-hdr
           state_topic_suffix: elevation
-          value_template: (value | float(0) * 3.280839) | round(1)
-          device: '{{ device }}'
+          value_template: value
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -593,7 +590,7 @@ script:
           icon: mdi:earth
           state_topic_suffix: geofence
           value_template: value
-          device: '{{ device }}'
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -608,7 +605,7 @@ script:
           icon: mdi:compass
           state_topic_suffix: heading
           unit_of_measurement: "°"
-          device: '{{ device }}'
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -623,7 +620,7 @@ script:
           sensor_name: Latitude
           icon: mdi:crosshairs-gps
           unit_of_measurement: "°"
-          device: '{{ device }}'
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -638,7 +635,7 @@ script:
           sensor_name: Longitude
           icon: mdi:crosshairs-gps
           unit_of_measurement: "°"
-          device: '{{ device }}'
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -653,7 +650,7 @@ script:
           sensor_name: Power
           device_class: power
           unit_of_measurement: kW
-          device: '{{ device }}'
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -666,10 +663,10 @@ script:
           object_id: speed
           state_topic_suffix: speed
           sensor_name: Speed
-          unit_of_measurement: mph
+          unit_of_measurement: "km/h"
           icon: mdi:speedometer
-          value_template: (value | float(0) / 1.609344) | round(1)
-          device: '{{ device }}'
+          value_template: value
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -685,7 +682,7 @@ script:
           state_class: measurement
           unit_of_measurement: "%"
           device_class: battery
-          device: '{{ device }}'
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -699,9 +696,9 @@ script:
           state_topic_suffix: odometer
           sensor_name: Odometer
           state_class: total_increasing
-          unit_of_measurement: mi
-          value_template: (value | float(0) / 1.609344) | round(1)
-          device: '{{ device }}'
+          unit_of_measurement: km
+          value_template: value
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -716,9 +713,9 @@ script:
           sensor_name: Battery Range
           icon: mdi:map-marker-distance
           state_class: measurement
-          unit_of_measurement: mi
-          value_template: (value | float(0) / 1.609344) | round(1)
-          device: '{{ device }}'
+          unit_of_measurement: km
+          value_template: value
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -732,7 +729,7 @@ script:
           state_topic_suffix: state
           sensor_name: State
           icon: mdi:car-connected
-          device: '{{ device }}'
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -748,9 +745,9 @@ script:
           icon: mdi:car-tire-alert
           state_class: measurement
           device_class: pressure
-          unit_of_measurement: psi
-          value_template: (value | float(0) * 14.503773) | round(1)
-          device: '{{ device }}'
+          unit_of_measurement: bar
+          value_template: value
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -766,9 +763,9 @@ script:
           icon: mdi:car-tire-alert
           state_class: measurement
           device_class: pressure
-          unit_of_measurement: psi
-          value_template: (value | float(0) * 14.503773) | round(1)
-          device: '{{ device }}'
+          unit_of_measurement: bar
+          value_template: value
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -784,9 +781,9 @@ script:
           icon: mdi:car-tire-alert
           state_class: measurement
           device_class: pressure
-          unit_of_measurement: psi
-          value_template: (value | float(0) * 14.503773) | round(1)
-          device: '{{ device }}'
+          unit_of_measurement: bar
+          value_template: value
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
@@ -802,18 +799,16 @@ script:
           icon: mdi:car-tire-alert
           state_class: measurement
           device_class: pressure
-          unit_of_measurement: psi
-          value_template: (value | float(0) * 14.503773) | round(1)
-          device: '{{ device }}'
+          unit_of_measurement: bar
+          value_template: value
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
           manufacturer: "{{ manufacturer }}"
           device_name: "{{ device_name }}"
 
-
-
-############ DEVICE TRACKER ############
+      ############ DEVICE TRACKER ############
       - service: script.teslamate_backend
         data:
           sensor_type: device_tracker
@@ -825,7 +820,7 @@ script:
           json_attributes_topic_suffix: latitude
           source_type: gps
           value_template: \"home\" if value | lower == \"home\"  else \"not_home\"
-          device: '{{ device }}'
+          device: "{{ device }}"
           discovery_prefix: "{{ discovery_prefix }}"
           base_topic: "{{ base_topic }}"
           suggested_area: "{{ suggested_area }}"
